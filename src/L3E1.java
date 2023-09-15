@@ -12,8 +12,8 @@ public class L3E1 {
         System.out.print("Enter your year of birth?" + "\n");
         String birth = input.nextLine();
 
-        System.out.print("Username:" + name.substring(0,1) + secondName.toLowerCase());
-        System.out.print("Password:" + secondName.substring(0,1) + name.toUpperCase() + birth);
+        System.out.println("Username:" + name.substring(0,1) + secondName.toLowerCase());
+        System.out.println("Password:" + secondName.substring(0,1) + name.toUpperCase() + birth);
 
 
 
