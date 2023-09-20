@@ -13,7 +13,7 @@ public class L3E1 {
         String birth = input.nextLine();
 
         System.out.println("Username:" + name.substring(0,1) + secondName.toLowerCase());
-        System.out.println("Password:" + secondName.substring(0,1) + name.toUpperCase() + birth);
+        System.out.println("Password:" + secondName.toLowerCase().substring(0,1) + name.toUpperCase().substring(0,3) + birth);
 
 
 
