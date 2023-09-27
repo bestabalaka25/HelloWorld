@@ -7,9 +7,9 @@ public class L5E3 {
         int base = table.nextInt();
 
         System.out.println("Times Table for " + base + ":");
-        for (int i = 1; i <= 12; i++) {
-            int result = base * i;
-            System.out.println(base + " x " + i + " = " + result);
+        for (int num = 1; num <= 12; num++) {
+            int result = base * num;
+            System.out.println(base + " x " + num + " = " + result);
         }
     }
 }
