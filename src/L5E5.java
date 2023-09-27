@@ -22,7 +22,6 @@ public class L5E5 {
             System.out.println("Quiz completed!");
             System.out.println("Your score: " + score + " out of 10.");
 
-            // Close the scanner
             scanner.close();
         }
     }
