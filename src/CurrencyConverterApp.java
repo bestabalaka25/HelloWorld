@@ -2,9 +2,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-
 public class CurrencyConverterApp {
     private Map<String, String> users = new HashMap<>();
+    private Scanner scanner = new Scanner(System.in);
+    private boolean loggedIn = false;
+    private String currentUsername = null;
 
     public static void main(String[] args) {
         CurrencyConverterApp app = new CurrencyConverterApp();
@@ -12,31 +14,17 @@ public class CurrencyConverterApp {
     }
 
     public void runCurrencyConverterApp() {
-        Scanner scanner = new Scanner(System.in);
-        boolean loggedIn = false;
-        String currentUsername = null;
-
         while (true) {
-            System.out.println("Currency Converter App");
-            if (!loggedIn) {
-                System.out.println("1. Sign Up");
-                System.out.println("2. Log In");
-                System.out.println("3. Exit");
-            } else {
-                System.out.println("1. Convert Currency");
-                System.out.println("2. Log Out");
-            }
-
-            System.out.print("Select an option: ");
+            printMenu();
             String option = scanner.nextLine();
 
             if (!loggedIn) {
                 switch (option) {
                     case "1":
-                        signUp(scanner);
+                        signUp();
                         break;
                     case "2":
-                        currentUsername = logIn(scanner);
+                        currentUsername = logIn();
                         if (currentUsername != null) {
                             loggedIn = true;
                             System.out.println("Log in successful.");
@@ -46,6 +34,7 @@ public class CurrencyConverterApp {
                         break;
                     case "3":
                         System.out.println("Goodbye!");
+                        scanner.close();
                         System.exit(0);
                     default:
                         System.out.println("Invalid option. Please try again.");
@@ -54,7 +43,7 @@ public class CurrencyConverterApp {
             } else {
                 switch (option) {
                     case "1":
-                        convertCurrency(scanner);
+                        convertCurrency();
                         break;
                     case "2":
                         loggedIn = false;
@@ -69,7 +58,20 @@ public class CurrencyConverterApp {
         }
     }
 
-    private void signUp(Scanner scanner) {
+    private void printMenu() {
+        System.out.println("Currency Converter App");
+        if (!loggedIn) {
+            System.out.println("1. Sign Up");
+            System.out.println("2. Log In");
+            System.out.println("3. Exit");
+        } else {
+            System.out.println("1. Convert Currency");
+            System.out.println("2. Log Out");
+        }
+        System.out.print("Select an option: ");
+    }
+
+    private void signUp() {
         System.out.println("Sign Up");
         System.out.print("Enter your username: ");
         String username = scanner.nextLine();
@@ -85,7 +87,7 @@ public class CurrencyConverterApp {
         System.out.println("Sign up successful!");
     }
 
-    private String logIn(Scanner scanner) {
+    private String logIn() {
         System.out.println("Log In");
         System.out.print("Enter your username: ");
         String username = scanner.nextLine();
@@ -99,7 +101,7 @@ public class CurrencyConverterApp {
         return null;
     }
 
-    private void convertCurrency(Scanner scanner) {
+    private void convertCurrency() {
         System.out.println("Currency Conversion");
         System.out.print("Enter the amount: ");
         double amount = Double.parseDouble(scanner.nextLine());
@@ -121,8 +123,7 @@ public class CurrencyConverterApp {
     }
 
     private double getConversionRate(String fromCurrency, String toCurrency) {
-        // You can implement a real exchange rate service here or use predefined rates.
-        // In this example, we use a simple hardcoded conversion rate.
+        // Update the conversion rates to include CAD
         if (fromCurrency.equals("USD") && toCurrency.equals("EUR")) {
             return 0.88;
         } else if (fromCurrency.equals("USD") && toCurrency.equals("GBP")) {
