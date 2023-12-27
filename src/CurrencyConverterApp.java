@@ -21,9 +21,9 @@ public class CurrencyConverterApp extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Login/Signup", createLoginSignupPanel());
-        tabbedPane.addTab("Currency Converter", createCurrencyConverterPanel());
 
         add(tabbedPane);
+
         // Set the JFrame size to match the iPhone 12 dimensions
         setSize(2532 / 2, 1170 / 2); // Dividing by 2 for a reasonable size
 
@@ -42,25 +42,35 @@ public class CurrencyConverterApp extends JFrame {
         JTextField usernameField = new JTextField(20);
         JPasswordField passwordField = new JPasswordField(20);
 
-        JButton signupButton = new JButton("Sign Up");
-        JButton loginButton = new JButton("Log In");
+        JButton signupButton = createStyledButton("Sign Up");
+        JButton loginButton = createStyledButton("Log In");
 
         signupButton.addActionListener(e -> {
-            signUp(usernameField.getText(), new String(passwordField.getPassword()));
-            usernameField.setText("");
-            passwordField.setText("");
+            if (validateInput(usernameField.getText(), passwordField.getPassword())) {
+                if (signUp(usernameField.getText(), new String(passwordField.getPassword()))) {
+                    usernameField.setText("");
+                    passwordField.setText("");
+                    switchToCurrencyConverterScreen();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter a valid username and password.");
+            }
         });
 
         loginButton.addActionListener(e -> {
             currentUsername = logIn(usernameField.getText(), new String(passwordField.getPassword()));
             if (currentUsername != null) {
                 loggedIn = true;
-                switchToCurrencyConverter();
+                switchToCurrencyConverterScreen();
                 JOptionPane.showMessageDialog(this, "Log in successful.");
             } else {
                 JOptionPane.showMessageDialog(this, "Log in failed.");
             }
         });
+
+        signupButton.setForeground(Color.WHITE);
+        loginButton.setForeground(Color.WHITE);
+
 
         panel.add(new JLabel("Username: "));
         panel.add(usernameField);
@@ -72,7 +82,41 @@ public class CurrencyConverterApp extends JFrame {
         return panel;
     }
 
-    private JPanel createCurrencyConverterPanel() {
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setBackground(Color.decode("#FF0029"));
+        return button;
+    }
+
+    private boolean validateInput(String username, char[] password) {
+        return !username.isEmpty() && password.length > 0;
+    }
+
+    private boolean signUp(String username, String password) {
+        if (users.containsKey(username)) {
+            JOptionPane.showMessageDialog(this, "Username already exists. Please choose a different username.");
+            return false;
+        } else {
+            users.put(username, password);
+            JOptionPane.showMessageDialog(this, "Sign up successful!");
+            return true;
+        }
+    }
+
+    private String logIn(String username, String password) {
+        if (users.containsKey(username) && users.get(username).equals(password)) {
+            return username;
+        }
+        return null;
+    }
+
+    private void switchToCurrencyConverterScreen() {
+        JTabbedPane tabbedPane = (JTabbedPane) getContentPane().getComponent(0);
+        tabbedPane.addTab("Currency Converter", createCurrencyConverterScreen());
+        tabbedPane.setSelectedIndex(1); // Switch to the Currency Converter tab
+    }
+
+    private JPanel createCurrencyConverterScreen() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
@@ -83,8 +127,16 @@ public class CurrencyConverterApp extends JFrame {
         JComboBox<String> fromCurrencyComboBox = new JComboBox<>(currencyCodes);
         JComboBox<String> toCurrencyComboBox = new JComboBox<>(currencyCodes);
 
-        JButton convertButton = new JButton("Convert");
-
+        JButton convertButton = createStyledButton("Convert");
+        convertButton.setForeground(Color.WHITE);
+        JButton conversionHistoryButton = createStyledButton("Conversion History");
+        conversionHistoryButton.setForeground(Color.WHITE);
+        JButton helpButton = createStyledButton("Help");
+        helpButton.setForeground(Color.WHITE);
+        JButton profileButton = createStyledButton("Profile");
+        profileButton.setForeground(Color.WHITE);
+        JButton logoutButton = createStyledButton("Log Out");
+        logoutButton.setForeground(Color.WHITE);
 
         convertButton.addActionListener(e -> {
             convertCurrency(
@@ -95,6 +147,29 @@ public class CurrencyConverterApp extends JFrame {
             amountField.setText("");
         });
 
+        conversionHistoryButton.addActionListener(e -> {
+            // Placeholder for conversion history functionality
+            JOptionPane.showMessageDialog(this, "Conversion History - Placeholder");
+        });
+
+        helpButton.addActionListener(e -> {
+            // Placeholder for help section functionality
+            JOptionPane.showMessageDialog(this, "Help Section - Placeholder");
+        });
+
+        profileButton.addActionListener(e -> {
+            // Placeholder for profile functionality
+            JOptionPane.showMessageDialog(this, "Profile - Placeholder");
+        });
+
+        logoutButton.addActionListener(e -> {
+            // Placeholder for log out functionality
+            loggedIn = false;
+            currentUsername = null;
+            switchToLoginSignup();
+            JOptionPane.showMessageDialog(this, "Log out successful.");
+        });
+
         panel.add(new JLabel("Amount: "));
         panel.add(amountField);
         panel.add(new JLabel("From Currency: "));
@@ -102,24 +177,12 @@ public class CurrencyConverterApp extends JFrame {
         panel.add(new JLabel("To Currency: "));
         panel.add(toCurrencyComboBox);
         panel.add(convertButton);
+        panel.add(conversionHistoryButton);
+        panel.add(helpButton);
+        panel.add(profileButton);
+        panel.add(logoutButton);
 
         return panel;
-    }
-
-    private void signUp(String username, String password) {
-        if (users.containsKey(username)) {
-            JOptionPane.showMessageDialog(this, "Username already exists. Please choose a different username.");
-        } else {
-            users.put(username, password);
-            JOptionPane.showMessageDialog(this, "Sign up successful!");
-        }
-    }
-
-    private String logIn(String username, String password) {
-        if (users.containsKey(username) && users.get(username).equals(password)) {
-            return username;
-        }
-        return null;
     }
 
     private void convertCurrency(double amount, String fromCurrency, String toCurrency) {
@@ -237,8 +300,9 @@ public class CurrencyConverterApp extends JFrame {
         }
     }
 
-    private void switchToCurrencyConverter() {
+    private void switchToLoginSignup() {
         JTabbedPane tabbedPane = (JTabbedPane) getContentPane().getComponent(0);
-        tabbedPane.setSelectedIndex(1); // Switch to the Currency Converter tab
+        tabbedPane.remove(1); // Remove the Currency Converter tab
+        tabbedPane.setSelectedIndex(0); // Switch to the Login/Signup tab
     }
 }
